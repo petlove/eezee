@@ -12,6 +12,7 @@ module Eezee
       RETRY_EXCEPTIONS = [
         *Faraday::Retry::Middleware::DEFAULT_EXCEPTIONS,
         Errno::ECONNRESET,
+        Faraday::ConflictError,
         Faraday::ConnectionFailed
       ].uniq.freeze
 
@@ -103,6 +104,7 @@ module Eezee
       def retry_options(opts = {})
         {
           exceptions: RETRY_EXCEPTIONS,
+          retry_statuses: [409, 429],
           interval: 0.5,
           interval_randomness: 0.5,
           max_interval: 60,
