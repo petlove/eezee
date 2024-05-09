@@ -67,7 +67,8 @@ shared_examples_for :eezee_client_builder do |builder|
                                raise_error: true,
                                url: 'www.linqueta.com',
                                protocol: 'https',
-                               headers: { 'Content-Type' => 'application/json' }
+                               headers: { 'Content-Type' => 'application/json' },
+                               max_retries: 10
           end
         end
 

@@ -124,7 +124,21 @@ RSpec.describe Eezee::Request, type: :model do
         url_encoded: false,
         preserve_url_params: false,
         ddtrace: {},
-        max_retries: 2
+        retry_opts: {
+          exceptions: [
+            Errno::ETIMEDOUT,
+            'Timeout::Error',
+            Faraday::TimeoutError,
+            Faraday::RetriableResponse,
+            Errno::ECONNRESET,
+            Faraday::ConflictError,
+            Faraday::ConnectionFailed
+          ],
+          interval: 0.5,
+          max: 2,
+          methods: %i[delete get head options put],
+          retry_statuses: [409, 429]
+        }
       )
     end
   end
