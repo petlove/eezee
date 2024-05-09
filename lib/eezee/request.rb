@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+require 'faraday'
+require 'faraday/retry'
+
 module Eezee
   class Request
     ACCESSORS = %i[
@@ -18,8 +21,15 @@ module Eezee
       url_encoded
       preserve_url_params
       ddtrace
-      max_retries
+      retry_opts
     ].freeze
+
+    RETRYABLE_EXCEPTIONS = [
+      *Faraday::Retry::Middleware::DEFAULT_EXCEPTIONS,
+      Errno::ECONNRESET,
+      Faraday::ConflictError,
+      Faraday::ConnectionFailed
+    ].uniq.freeze
 
     DEFAULT = {
       headers: {},
@@ -30,7 +40,13 @@ module Eezee
       url_encoded: false,
       preserve_url_params: false,
       ddtrace: {},
-      max_retries: 2
+      retry_opts: {
+        max: 2,
+        interval: 0.5,
+        exceptions: RETRYABLE_EXCEPTIONS,
+        methods: %i[delete get head options put],
+        retry_statuses: [409, 429]
+      }
     }.freeze
 
     attr_accessor(*(ACCESSORS | %i[uri method]))
