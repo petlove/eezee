@@ -31,7 +31,12 @@ module Eezee
     def code
       return if timeout?
 
-      @code ||= success_response? ? @original.status : @original.response[:status]
+      @code ||=
+        if success_response?
+          @original.status
+        else
+          @original.response.nil? ? 0 : @original.response[:status]
+        end
     end
 
     def timeout?

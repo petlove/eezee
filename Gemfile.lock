@@ -3,8 +3,8 @@ PATH
   specs:
     eezee (1.0.16)
       faraday (>= 2.7)
-      faraday-retry
-      oj
+      faraday-retry (~> 2.2)
+      oj (~> 3.16)
 
 GEM
   remote: https://rubygems.org/
