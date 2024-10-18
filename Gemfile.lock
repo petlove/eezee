@@ -34,6 +34,9 @@ GEM
     faraday-net_http (3.0.2)
     faraday-retry (2.2.0)
       faraday (~> 2.0)
+    fuubar (2.5.1)
+      rspec-core (~> 3.0)
+      ruby-progressbar (~> 1.4)
     hashdiff (1.0.1)
     i18n (1.14.1)
       concurrent-ruby (~> 1.0)
@@ -112,12 +115,14 @@ GEM
       hashdiff (>= 0.4.0, < 2.0.0)
 
 PLATFORMS
+  ruby
   x86_64-linux
 
 DEPENDENCIES
   bundler (~> 2.0)
   eezee!
   factory_bot (~> 5.1, >= 5.1.1)
+  fuubar
   pry-byebug (~> 3.7, >= 3.7.0)
   rake (~> 10.0)
   rspec (~> 3.0)
