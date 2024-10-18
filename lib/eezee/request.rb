@@ -95,7 +95,7 @@ module Eezee
 
     def accessors!(params)
       params.slice(*ACCESSORS)
-            .each { |k, v| instance_variable_set("@#{k}", v) }
+            .each { |k, v| instance_variable_set(:"@#{k}", v) }
     end
 
     def build_urn!
