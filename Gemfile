@@ -4,7 +4,6 @@ source 'https://rubygems.org'
 
 gem 'bundler', '~> 2.0'
 gem 'factory_bot', '~> 5.1', '>= 5.1.1'
-gem 'fuubar'
 gem 'pry-byebug', '~> 3.7', '>= 3.7.0'
 gem 'rake', '~> 12.0'
 gem 'rspec', '~> 3.0'
