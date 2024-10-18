@@ -70,7 +70,7 @@ module Eezee
         faraday_req.body = req.payload
 
         return if req.url_encoded
-        return if req.headers[:"Content-Type"] == 'application/xml'
+        return if req.headers[:'Content-Type'] == 'application/xml'
 
         faraday_req.body = faraday_req.body.to_json
       end
