@@ -59,7 +59,9 @@ module Eezee
       end
 
       def build_faraday_request(req, client, method)
-        client.send(method, req.path) do |faraday_req|
+        path = req.uri.sub("#{client.url_prefix.to_s}/", '')
+
+        client.send(method, path) do |faraday_req|
           faraday_req.headers = req.headers if req.headers
           faraday_req.options[:open_timeout] = req.open_timeout if req.open_timeout
           faraday_req.options[:timeout] = req.timeout if req.timeout
