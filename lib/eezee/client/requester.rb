@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'faraday'
+require 'faraday/net_http_persistent'
 require 'faraday/retry'
 require 'json'
 
@@ -97,7 +98,9 @@ module Eezee
         config.headers = request.headers if request.headers
         config.options[:open_timeout] = request.open_timeout if request.open_timeout
         config.options[:timeout] = request.timeout if request.timeout
-        config.adapter(Faraday.default_adapter)
+        config.adapter :net_http_persistent do |http|
+          http.idle_timeout = 30
+        end
         config.use(:ddtrace, request.ddtrace) if request.ddtrace.any?
       end
     end
