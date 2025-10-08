@@ -59,7 +59,11 @@ module Eezee
       end
 
       def build_faraday_request(req, client, method)
-        client.send(method) do |faraday_req|
+        client.send(method, req.path) do |faraday_req|
+          faraday_req.headers = req.headers if req.headers
+          faraday_req.options[:open_timeout] = req.open_timeout if req.open_timeout
+          faraday_req.options[:timeout] = req.timeout if req.timeout
+          faraday_req.request :url_encoded if req.url_encoded
           build_faraday_request_body(faraday_req, req)
         end
       end
@@ -76,7 +80,10 @@ module Eezee
       end
 
       def build_faraday_client(request)
-        Faraday.new(request.uri) do |config|
+        @faraday_clients ||= {}
+        url = "#{request.protocol}://#{request.url.to_s}"
+
+        @faraday_clients[url] ||= Faraday.new(url) do |config|
           faraday_client_options!(config, request)
         end
       end
