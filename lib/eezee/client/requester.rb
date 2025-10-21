@@ -98,10 +98,13 @@ module Eezee
         config.headers = request.headers if request.headers
         config.options[:open_timeout] = request.open_timeout if request.open_timeout
         config.options[:timeout] = request.timeout if request.timeout
-        config.adapter :net_http_persistent do |http|
-          http.idle_timeout = 30
-        end
+        config.adapter(*request.adapter)
+
+        # for datadog 1.x
         config.use(:ddtrace, request.ddtrace) if request.ddtrace.any?
+
+        # for datadog 2.x
+        config.use(:datadog_tracing, request.datadog_tracing) if request.datadog_tracing.any?
       end
     end
   end

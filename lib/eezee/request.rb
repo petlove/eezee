@@ -21,7 +21,9 @@ module Eezee
       url_encoded
       preserve_url_params
       ddtrace
+      datadog_tracing
       retry_opts
+      adapter
     ].freeze
 
     RETRYABLE_EXCEPTIONS = [
@@ -40,6 +42,8 @@ module Eezee
       url_encoded: false,
       preserve_url_params: false,
       ddtrace: {},
+      datadog_tracing: {},
+      adapter: [Faraday.default_adapter, {}],
       retry_opts: {
         max: 2,
         interval: 0.5,

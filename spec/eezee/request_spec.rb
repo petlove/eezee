@@ -117,6 +117,7 @@ RSpec.describe Eezee::Request, type: :model do
           state: 'Sao Paulo',
           country: 'Brazil'
         },
+        adapter: [Faraday.default_adapter, {}],
         protocol: 'https',
         raise_error: true,
         timeout: 10,
@@ -124,6 +125,7 @@ RSpec.describe Eezee::Request, type: :model do
         url_encoded: false,
         preserve_url_params: false,
         ddtrace: {},
+        datadog_tracing: {},
         retry_opts: {
           exceptions: [
             Errno::ETIMEDOUT,
