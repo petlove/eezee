@@ -166,6 +166,7 @@ Here are the list of available options and about them:
 
 | Option | Required | Default | What is it? | Example |
 |--------|----------|---------|-------------|---------|
+| `adapter` | no | `[Faraday.default_adapter, {}]` | The adapter | `[:net_http_persistent, { idle_timeout: 30 }]` |
 | `url` | Yes | `nil` | The request's url | `"rickandmortyapi.com/api"` |
 | `protocol` | No | `nil` | The request's protocol | `:https` |
 | `path` | No | `nil` | The resource's path | `"characters\:characted_id\addresses"` |
@@ -180,7 +181,8 @@ Here are the list of available options and about them:
 | `logger` | No | `false` | If you want to log the request, response, and error | `true` |
 | `url_encoded` | No | `false` | If you want to send request body as form_url_encoded | `true` |
 | `preserve_url_params` | No | `false` | The query params will be preserved if the url or path has a nested param like `:character_id` this value will be not replaced | `true` |
-| `ddtrace` | No | `nil` | Support for [DataDog apm](http://gems.datadoghq.com/trace/docs/#Faraday) | `{}` |
+| `ddtrace` | No | `nil` | datadog 1.x - Support for [DataDog apm](https://docs.datadoghq.com/tracing/trace_collection/automatic_instrumentation/dd_libraries/ruby_v1/) | `{}` |
+| `datadog_tracing` | No | `nil` | datadog 2.x - Support for [DataDog apm](https://docs.datadoghq.com/tracing/trace_collection/automatic_instrumentation/dd_libraries/ruby/#instrument-your-application) | `{}` |
 
 ### Services
 

@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'faraday'
+require 'faraday/net_http_persistent'
 require 'faraday/retry'
 require 'json'
 
@@ -59,7 +60,13 @@ module Eezee
       end
 
       def build_faraday_request(req, client, method)
-        client.send(method) do |faraday_req|
+        path = req.uri.sub("#{client.url_prefix.to_s}/", '')
+
+        client.send(method, path) do |faraday_req|
+          faraday_req.headers = req.headers if req.headers
+          faraday_req.options[:open_timeout] = req.open_timeout if req.open_timeout
+          faraday_req.options[:timeout] = req.timeout if req.timeout
+          faraday_req.request :url_encoded if req.url_encoded
           build_faraday_request_body(faraday_req, req)
         end
       end
@@ -76,7 +83,10 @@ module Eezee
       end
 
       def build_faraday_client(request)
-        Faraday.new(request.uri) do |config|
+        @faraday_clients ||= {}
+        url = "#{request.protocol}://#{request.url.to_s}"
+
+        @faraday_clients[url] ||= Faraday.new(url) do |config|
           faraday_client_options!(config, request)
         end
       end
@@ -88,8 +98,13 @@ module Eezee
         config.headers = request.headers if request.headers
         config.options[:open_timeout] = request.open_timeout if request.open_timeout
         config.options[:timeout] = request.timeout if request.timeout
-        config.adapter(Faraday.default_adapter)
+        config.adapter(*request.adapter)
+
+        # for datadog 1.x
         config.use(:ddtrace, request.ddtrace) if request.ddtrace.any?
+
+        # for datadog 2.x
+        config.use(:datadog_tracing, request.datadog_tracing) if request.datadog_tracing.any?
       end
     end
   end
