@@ -26,12 +26,12 @@ module Eezee
         build_faraday_client(request)
           .then { |client| build_faraday_request(request, client, method) }
           .then { |response| Eezee::Response.new(response) }
-          .tap  { |response| response.log if request.logger }
+          .tap  { |response| request.log(request.single_line_logger) if request.logger }
           .tap  { |response| request.after!(request, response, nil) }
       rescue Faraday::Error => e
         response = Eezee::Response.new(e)
         error = Eezee::RequestErrorFactory.build(request, response)
-        error.log if request.logger
+        request.log(request.single_line_logger) if request.logger
         return response if rescue_faraday_error?(request, response, error)
 
         raise error
@@ -45,7 +45,7 @@ module Eezee
              .tap do |request|
           request.before!(request)
           request.method = method
-          request.log if request.logger
+          request.log(request.single_line_logger) if request.logger
         end
       end
 

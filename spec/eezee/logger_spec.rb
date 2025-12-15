@@ -15,21 +15,46 @@ RSpec.describe Eezee::Logger, type: :model do
       )
     end
 
-    after { subject }
+    let(:request_obj) do
+      FactoryBot.build(
+        :request,
+        path: nil,
+        params: { user: 1 },
+        headers: { Token: 'Token 2b173033-45fa-459a-afba-9eea79cb75be' },
+        payload: { street: 'Paulista Avenue' }
+      )
+    end
 
-    it 'puts request logs' do
-      expect(described_class)
-        .to receive(:p)
-        .with('INFO -- request: GET https://www.linqueta.com?user=1')
-        .once
-      expect(described_class)
-        .to receive(:p)
-        .with('INFO -- request: HEADERS: {"Token":"Token 2b173033-45fa-459a-afba-9eea79cb75be"}')
-        .once
-      expect(described_class)
-        .to receive(:p)
-        .with('INFO -- request: PAYLOAD: {"street":"Paulista Avenue"}')
-        .once
+    context 'when single_line_logger is false' do
+      subject { Eezee::Logger.request(request_obj, :GET, false) }
+      after { subject }
+
+      it 'puts request logs' do
+        expect(described_class).to receive(:p)
+          .with('INFO -- request: GET https://www.linqueta.com?user=1')
+          .once
+
+        expect(described_class).to receive(:p)
+          .with('INFO -- request: HEADERS: {"Token":"Token 2b173033-45fa-459a-afba-9eea79cb75be"}')
+          .once
+
+        expect(described_class).to receive(:p)
+          .with('INFO -- request: PAYLOAD: {"street":"Paulista Avenue"}')
+          .once
+      end
+    end
+
+    context 'when single_line_logger is true' do
+      subject { Eezee::Logger.request(request_obj, :GET, true) }
+
+      after { subject }
+
+      it 'puts single line request log' do
+        expect(described_class)
+          .to receive(:p)
+          .with('INFO -- request: GET https://www.linqueta.com?user=1 HEADERS: {"Token":"Token 2b173033-45fa-459a-afba-9eea79cb75be"} PAYLOAD: {"street":"Paulista Avenue"}')
+          .once
+      end
     end
   end
 

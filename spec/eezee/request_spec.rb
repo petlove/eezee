@@ -81,11 +81,19 @@ RSpec.describe Eezee::Request, type: :model do
   describe '#log' do
     subject { request.log }
 
-    let(:request) { build(:request).tap { |r| r.method = :get } }
-
     after { subject }
 
-    it { expect(Eezee::Logger).to receive(:request).with(request, 'GET') }
+    context 'when single_line_logger is false' do
+      let(:request) { build(:request).tap { |r| r.method = :get } }
+
+      it { expect(Eezee::Logger).to receive(:request).with(request, 'GET', false) }
+    end
+
+    context 'when single_line_logger is true' do
+      let(:request) { build(:request, single_line_logger: true).tap { |r| r.method = :get } }
+
+      it { expect(Eezee::Logger).to receive(:request).with(request, 'GET', true) }
+    end
   end
 
   describe '#attributes' do
@@ -98,6 +106,7 @@ RSpec.describe Eezee::Request, type: :model do
         after: nil,
         before: nil,
         logger: true,
+        single_line_logger: false,
         headers: {
           'User-Agent' => 'Eezee',
           Token: 'Token 2b173033-45fa-459a-afba-9eea79cb75be'

@@ -10,6 +10,7 @@ module Eezee
       before
       headers
       logger
+      single_line_logger
       open_timeout
       params
       path
@@ -36,6 +37,7 @@ module Eezee
     DEFAULT = {
       headers: {},
       logger: false,
+      single_line_logger: false,
       params: {},
       payload: {},
       raise_error: false,
@@ -60,7 +62,7 @@ module Eezee
     end
 
     def log
-      Eezee::Logger.request(self, @method.to_s.upcase)
+      Eezee::Logger.request(self, @method.to_s.upcase, single_line_logger)
     end
 
     def attributes
