@@ -179,6 +179,7 @@ Here are the list of available options and about them:
 | `open_timeout` | No | `nil` | If it exceed this timeout to open a connection Eezee will raise the error `Eezee::TimeoutError` | `2` |
 | `raise_error` | No | `false` | If you want that Eezee raises an error if the request has wasn't successful. See more in [Errors](#errors) | `true` |
 | `logger` | No | `false` | If you want to log the request, response, and error | `true` |
+| `single_line_logger` | No | `false` | If you want to log the request, response, and error on a single line | `true` |
 | `url_encoded` | No | `false` | If you want to send request body as form_url_encoded | `true` |
 | `preserve_url_params` | No | `false` | The query params will be preserved if the url or path has a nested param like `:character_id` this value will be not replaced | `true` |
 | `ddtrace` | No | `nil` | datadog 1.x - Support for [DataDog apm](https://docs.datadoghq.com/tracing/trace_collection/automatic_instrumentation/dd_libraries/ruby_v1/) | `{}` |
