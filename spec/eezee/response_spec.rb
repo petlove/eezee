@@ -132,6 +132,6 @@ RSpec.describe Eezee::Response, type: :model do
 
     after { subject }
 
-    it { expect(Eezee::Logger).to receive(:response).with(response) }
+    it { expect(Eezee::Logger).to receive(:response).with(response, false) }
   end
 end

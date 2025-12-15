@@ -10,7 +10,7 @@ module Eezee
     end
 
     def log
-      Eezee::Logger.error(self)
+      Eezee::Logger.error(self, response&.single_line_logger)
     end
   end
 end

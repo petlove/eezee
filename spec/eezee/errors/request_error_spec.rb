@@ -7,7 +7,7 @@ RSpec.describe Eezee::RequestError, type: :model do
     subject { described_class.new(request, response) }
 
     let(:request) { build :request }
-    let(:response) { Eezee::Response.new(nil) }
+    let(:response) { Eezee::Response.new(nil, false) }
 
     before do
       allow(response).to receive(:body).and_return(error: 'some error')
@@ -22,7 +22,7 @@ RSpec.describe Eezee::RequestError, type: :model do
     subject { error.log }
 
     let(:error) { described_class.new(request, response) }
-    let(:response) { Eezee::Response.new(nil) }
+    let(:response) { Eezee::Response.new(nil, true) }
     let(:request) { build :request }
 
     before do
@@ -32,6 +32,6 @@ RSpec.describe Eezee::RequestError, type: :model do
 
     after { subject }
 
-    it { expect(Eezee::Logger).to receive(:error).with(error) }
+    it { expect(Eezee::Logger).to receive(:error).with(error, true) }
   end
 end

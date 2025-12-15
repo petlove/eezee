@@ -90,6 +90,21 @@ RSpec.describe Eezee::Logger, type: :model do
         .with('INFO -- response: BODY: {"error":"some error"}')
         .once
     end
+
+    context 'when single_line_logger is true' do
+      subject { Eezee::Logger.response(response, true) }
+
+      let(:response) { Eezee::Response.new(nil, true) }
+
+      after { subject }
+
+      it 'puts single line request log' do
+        expect(described_class)
+          .to receive(:p)
+          .with('INFO -- response: SUCCESS: false TIMEOUT: false CODE: 400 BODY: {"error":"some error"}')
+          .once
+      end
+    end
   end
 
   describe '.response' do
@@ -129,6 +144,23 @@ RSpec.describe Eezee::Logger, type: :model do
         .to receive(:p)
         .with('INFO -- error: BODY: {"error":"some error"}')
         .once
+    end
+
+    context 'when single_line_logger is true' do
+      subject { Eezee::Logger.error(error, true) }
+
+      let(:error) { Eezee::ResourceNotFoundError.new(request, response) }
+      let(:response) { Eezee::Response.new(nil, true) }
+      let(:request) { build :request }
+
+      after { subject }
+
+      it 'puts single line request log' do
+        expect(described_class)
+          .to receive(:p)
+          .with('INFO -- error: Eezee::ResourceNotFoundError error: SUCCESS: false TIMEOUT: false CODE: 400 BODY: {"error":"some error"}')
+          .once
+      end
     end
   end
 end

@@ -7,13 +7,15 @@ require 'forwardable'
 module Eezee
   class Response
     attr_reader :original
+    attr_accessor :single_line_logger
 
     extend Forwardable
 
     def_delegator :body, :[]
 
-    def initialize(original)
+    def initialize(original, single_line_logger = false)
       @original = original
+      @single_line_logger = single_line_logger
     end
 
     def body
@@ -46,7 +48,7 @@ module Eezee
     end
 
     def log
-      Eezee::Logger.response(self)
+      Eezee::Logger.response(self, @single_line_logger)
     end
 
     private

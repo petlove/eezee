@@ -5,17 +5,21 @@ module Eezee
     module_function
 
     # rubocop:disable Metrics/AbcSize
-    def request(req, method, single_line_logger)
+    def request(req, method, single_line_logger = false)
       return single_line_message('request', req.class, req, method) if single_line_logger
 
       message('request', req.class, req, method)
     end
 
-    def response(res)
+    def response(res, single_line_logger = false)
+      return single_line_message('response', res.class, res) if single_line_logger
+
       message('response', res.class, res)
     end
 
-    def error(err)
+    def error(err, single_line_logger = false)
+      return single_line_message('error', err.class, err.response) if single_line_logger
+
       message('error', err.class, err.response)
     end
 
@@ -24,8 +28,6 @@ module Eezee
     end
 
     def message(type, klass, content, method = nil)
-      p log("#{type}: #{klass}") if type == 'error'
-
       if type == 'request'
         p log("request: #{method} #{content.uri}")
         p log("request: HEADERS: #{content.headers&.to_json}") if content.headers
@@ -33,6 +35,7 @@ module Eezee
         return nil
       end
 
+      p log("#{type}: #{klass}") if type == 'error'
       p log("#{type}: SUCCESS: #{content.success?}")
       p log("#{type}: TIMEOUT: #{content.timeout?}")
       p log("#{type}: CODE: #{content.code}")
@@ -40,8 +43,6 @@ module Eezee
     end
 
     def single_line_message(type, klass, content, method = nil)
-      p log("#{type}: #{klass}") if type == 'error'
-
       if type == 'request'
         parts = ["request: #{method} #{content.uri}"]
         parts << "HEADERS: #{content.headers&.to_json}" if content.headers
@@ -50,10 +51,15 @@ module Eezee
         return nil
       end
 
-      p log("#{type}: SUCCESS: #{content.success?} " \
-            "TIMEOUT: #{content.timeout?} " \
-            "CODE: #{content.code} " \
-            "BODY: #{content.body&.to_json}")
+      parts = [
+        "#{type}: SUCCESS: #{content.success?}",
+        "TIMEOUT: #{content.timeout?}",
+        "CODE: #{content.code}",
+        "BODY: #{content.body&.to_json}"
+      ]
+
+      parts.unshift("#{type}: #{klass}") if type == 'error'
+      p log(parts.join(' '))
     end
     # rubocop:enable Metrics/AbcSize
   end
