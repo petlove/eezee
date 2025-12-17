@@ -19,7 +19,7 @@ module Eezee
     end
 
     def log(message)
-      "INFO = #{message}"
+      "INFO -- #{message}"
     end
 
     def message(type, klass, content, method = nil)
@@ -31,7 +31,8 @@ module Eezee
           headers: content.headers,
           payload: content.payload
         }.compact
-        p log(log_hash.to_json)
+
+        p log_hash.to_json
         return nil
       end
 
@@ -44,7 +45,7 @@ module Eezee
         body: content.body
       }.compact
 
-      p log(log_hash.to_json)
+      p log_hash.to_json
     end
     # rubocop:enable Metrics/AbcSize
   end

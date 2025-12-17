@@ -20,7 +20,7 @@ RSpec.describe Eezee::Logger, type: :model do
     it 'puts request logs' do
       expect(described_class)
         .to receive(:p)
-        .with('INFO = {"type":"request","method":"GET","uri":"https://www.linqueta.com?user=1","headers":{"Token":"Token 2b173033-45fa-459a-afba-9eea79cb75be"},"payload":{"street":"Paulista Avenue"}}')
+        .with('{"type":"request","method":"GET","uri":"https://www.linqueta.com?user=1","headers":{"Token":"Token 2b173033-45fa-459a-afba-9eea79cb75be"},"payload":{"street":"Paulista Avenue"}}')
         .once
     end
   end
@@ -41,7 +41,7 @@ RSpec.describe Eezee::Logger, type: :model do
 
     it 'puts response logs' do
       expect(described_class).to receive(:p)
-        .with('INFO = {"type":"response","success":false,"timeout":false,"code":400,"body":{"error":"some error"}}')
+        .with('{"type":"response","success":false,"timeout":false,"code":400,"body":{"error":"some error"}}')
         .once
     end
   end
@@ -65,7 +65,7 @@ RSpec.describe Eezee::Logger, type: :model do
     it 'puts response logs' do
       expect(described_class)
         .to receive(:p)
-        .with('INFO = {"type":"error","klass":"Eezee::ResourceNotFoundError","success":false,"timeout":false,"code":400,"body":{"error":"some error"}}')
+        .with('{"type":"error","klass":"Eezee::ResourceNotFoundError","success":false,"timeout":false,"code":400,"body":{"error":"some error"}}')
         .once
     end
   end
