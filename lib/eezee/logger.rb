@@ -5,23 +5,19 @@ module Eezee
     module_function
 
     def request(req, method)
-      message('request', req.class, req, method)
+      message('request', req, method)
       nil
     end
 
     def response(res)
-      message('response', res.class, res)
+      message('response', res)
     end
 
     def error(err)
-      message('error', err.class, err.response)
+      message('error', err.response, nil, err.class)
     end
 
-    def log(message)
-      "INFO -- #{message}"
-    end
-
-    def message(type, klass, content, method = nil)
+    def message(type, content, method = nil, klass = nil)
       if type == 'request'
         log_hash = {
           type: 'request',
@@ -37,7 +33,7 @@ module Eezee
 
       log_hash = {
         type: type,
-        klass: (klass if type == 'error'),
+        klass: klass,
         success: content.success?,
         timeout: content.timeout?,
         code: content.code,
