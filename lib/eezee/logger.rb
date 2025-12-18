@@ -4,7 +4,6 @@ module Eezee
   module Logger
     module_function
 
-    # rubocop:disable Metrics/AbcSize
     def request(req, method)
       message('request', req.class, req, method)
       nil
@@ -47,6 +46,5 @@ module Eezee
 
       p log_hash.to_json
     end
-    # rubocop:enable Metrics/AbcSize
   end
 end
