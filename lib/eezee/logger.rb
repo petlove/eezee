@@ -4,32 +4,43 @@ module Eezee
   module Logger
     module_function
 
-    # rubocop:disable Metrics/AbcSize
     def request(req, method)
-      p log("request: #{method} #{req.uri}")
-      p log("request: HEADERS: #{req.headers&.to_json}") if req.headers
-      p log("request: PAYLOAD: #{req.payload&.to_json}") if req.payload
+      message('request', req, method)
       nil
     end
 
     def response(res)
-      p log("response: SUCCESS: #{res.success?}")
-      p log("response: TIMEOUT: #{res.timeout?}")
-      p log("response: CODE: #{res.code}")
-      p log("response: BODY: #{res.body&.to_json}")
+      message('response', res)
     end
 
     def error(err)
-      p log("error: #{err.class}")
-      p log("error: SUCCESS: #{err.response.success?}")
-      p log("error: TIMEOUT: #{err.response.timeout?}")
-      p log("error: CODE: #{err.response.code}")
-      p log("error: BODY: #{err.response.body&.to_json}")
+      message('error', err.response, nil, err.class)
     end
 
-    def log(message)
-      "INFO -- #{message}"
+    def message(type, content, method = nil, klass = nil)
+      if type == 'request'
+        log_hash = {
+          type: 'request',
+          method: method,
+          uri: content.uri,
+          headers: content.headers,
+          payload: content.payload
+        }.compact
+
+        p log_hash.to_json
+        return nil
+      end
+
+      log_hash = {
+        type: type,
+        klass: klass,
+        success: content.success?,
+        timeout: content.timeout?,
+        code: content.code,
+        body: content.body
+      }.compact
+
+      p log_hash.to_json
     end
-    # rubocop:enable Metrics/AbcSize
   end
 end

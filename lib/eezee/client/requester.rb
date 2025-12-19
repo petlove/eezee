@@ -60,7 +60,7 @@ module Eezee
       end
 
       def build_faraday_request(req, client, method)
-        path = req.uri.sub("#{client.url_prefix.to_s}/", '')
+        path = req.uri.sub("#{client.url_prefix}/", '')
 
         client.send(method, path) do |faraday_req|
           faraday_req.headers = req.headers if req.headers
@@ -84,7 +84,7 @@ module Eezee
 
       def build_faraday_client(request)
         @faraday_clients ||= {}
-        url = "#{request.protocol}://#{request.url.to_s}"
+        url = "#{request.protocol}://#{request.url}"
 
         @faraday_clients[url] ||= Faraday.new(url) do |config|
           faraday_client_options!(config, request)

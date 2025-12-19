@@ -19,16 +19,12 @@ RSpec.describe Eezee::Logger, type: :model do
 
     it 'puts request logs' do
       expect(described_class)
-        .to receive(:p)
-        .with('INFO -- request: GET https://www.linqueta.com?user=1')
-        .once
-      expect(described_class)
-        .to receive(:p)
-        .with('INFO -- request: HEADERS: {"Token":"Token 2b173033-45fa-459a-afba-9eea79cb75be"}')
-        .once
-      expect(described_class)
-        .to receive(:p)
-        .with('INFO -- request: PAYLOAD: {"street":"Paulista Avenue"}')
+      receive(:p)
+        .with(
+          '{"type":"request","method":"GET","uri":"https://www.linqueta.com?user=1",' \
+          '"headers":{"Token":"Token 2b173033-45fa-459a-afba-9eea79cb75be"},' \
+          '"payload":{"street":"Paulista Avenue"}}'
+        )
         .once
     end
   end
@@ -48,21 +44,11 @@ RSpec.describe Eezee::Logger, type: :model do
     after { subject }
 
     it 'puts response logs' do
-      expect(described_class)
-        .to receive(:p)
-        .with('INFO -- response: SUCCESS: false')
-        .once
-      expect(described_class)
-        .to receive(:p)
-        .with('INFO -- response: TIMEOUT: false')
-        .once
-      expect(described_class)
-        .to receive(:p)
-        .with('INFO -- response: CODE: 400')
-        .once
-      expect(described_class)
-        .to receive(:p)
-        .with('INFO -- response: BODY: {"error":"some error"}')
+      expect(described_class).to receive(:p)
+        .with(
+          '{"type":"response","success":false,"timeout":false,"code":400,' \
+          '"body":{"error":"some error"}}'
+        )
         .once
     end
   end
@@ -86,23 +72,11 @@ RSpec.describe Eezee::Logger, type: :model do
     it 'puts response logs' do
       expect(described_class)
         .to receive(:p)
-        .with('INFO -- error: Eezee::ResourceNotFoundError')
-        .once
-      expect(described_class)
-        .to receive(:p)
-        .with('INFO -- error: SUCCESS: false')
-        .once
-      expect(described_class)
-        .to receive(:p)
-        .with('INFO -- error: TIMEOUT: false')
-        .once
-      expect(described_class)
-        .to receive(:p)
-        .with('INFO -- error: CODE: 400')
-        .once
-      expect(described_class)
-        .to receive(:p)
-        .with('INFO -- error: BODY: {"error":"some error"}')
+        .with(
+          '{"type":"error","klass":"Eezee::ResourceNotFoundError",' \
+          '"success":false,"timeout":false,"code":400,' \
+          '"body":{"error":"some error"}}'
+        )
         .once
     end
   end
