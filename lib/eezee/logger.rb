@@ -2,6 +2,8 @@
 
 module Eezee
   module Logger
+    SENSITIVE_HEADERS = %w[Authorization Ocp-Apim-Subscription-Key].freeze
+
     module_function
 
     def request(req, method)
@@ -23,7 +25,7 @@ module Eezee
           type: 'request',
           method: method,
           uri: content.uri,
-          headers: content.headers,
+          headers: filter_headers(content.headers),
           payload: content.payload
         }.compact
 
@@ -41,6 +43,14 @@ module Eezee
       }.compact
 
       p log_hash.to_json
+    end
+
+    def filter_headers(headers)
+      return headers unless headers.is_a?(Hash)
+
+      headers.to_h do |key, value|
+        SENSITIVE_HEADERS.any? { |s| s.casecmp(key.to_s).zero? } ? [key, '[FILTERED]'] : [key, value]
+      end
     end
   end
 end
